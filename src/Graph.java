@@ -140,7 +140,8 @@ public class Graph {
             while (true) {
                 int u = pred[index];
 
-                //if the flow from the path is less than the current flow
+                //if the flow from the path is less
+                // than the current flow, update the totalFlow
                 if (residual[u][index] < totalFlow) {
                     totalFlow = residual[u][index];
                 }
@@ -168,38 +169,23 @@ public class Graph {
             path += ") (" + totalFlow + ") $" + cost;
             System.out.println(path);
         }
+        //Printing all the flows
+        findAllFlows();
+    }
 
-        //Finding Final Flows
-        String [] flows = new String [vertexCt];
-
-        //a residual array for flows already used
-        int [] flowUsed = new int [vertexCt];
-
-        // starting at the last path in paths
-        for (int i = paths.size() - 1; i >= 0; i--) {
-            ArrayList<Integer> path = paths.get(i);
-
-            for (int j = 0; j < path.size() - 1; j ++) {
-                int u = path.get(j);
-                int v = path.get(j + 1);
-
-                //The flow will only count if the edge cost is greater than 0 and there's still capacity left
-                if (edgeCost[u][v] > 0 && flowUsed[u] < capacity[source][u]) {
-                    //records that node u has been used
-                    flowUsed[u] ++;
-                    //Turning the flow to a string and adding it to the array of flows
+    public void findAllFlows() {
+        //iterating through the matrices
+        for (int u = 0; u < vertexCt; u++) {
+            for (int v = 0; v < vertexCt; v++) {
+                //if capacity is greater than the residual, then a path was made
+                //if you want me to include all paths, delete '&& edgecost[u][v] > 0'
+                if (capacity[u][v] > residual[u][v] && edgeCost[u][v] > 0) {
                     String flow = "Flow " + u + " -> " + v + " (" + capacity[u][v] + ") $" + edgeCost[u][v];
-                    if (flows[u] != null) flows[u] =  flow + "\n" + flows[u];
-                    else flows[u] = flow;
+                    System.out.println(flow);
                 }
             }
         }
-        //Printing all flows
-        for (String flow : flows) {
-            if (flow != null) System.out.print(flow + "\n");
-        }
     }
-
 
     public void minCostMaxFlow(){
         System.out.println( printMatrix("Capacity", capacity));
